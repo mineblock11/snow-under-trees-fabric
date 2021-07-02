@@ -48,13 +48,12 @@ public class SnowUnderTrees implements ModInitializer
 		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, snowUnderTrees.getValue(), SNOW_UNDER_TREES_CONFIGURED);
 
 		ServerTickEvents.START_WORLD_TICK.register(WorldTickHandler::onWorldTick);
-		BiomeModifications.addFeature(b -> shouldAddSnow(b.getBiome()), GenerationStep.Feature.TOP_LAYER_MODIFICATION, snowUnderTrees);
+		BiomeModifications.addFeature(b -> shouldAddSnow(b.getBiome(), b.getBiomeKey()), GenerationStep.Feature.TOP_LAYER_MODIFICATION, snowUnderTrees);
 	}
 
-	private boolean shouldAddSnow(Biome biome)
+	private boolean shouldAddSnow(Biome biome, RegistryKey<Biome> key)
 	{
-		Identifier id = BuiltinRegistries.BIOME.getId(biome);
-		if (id == null) return false;
+		Identifier id = key.getValue();
 		return CONFIG.enableBiomeFeature && (biome.getPrecipitation() == Biome.Precipitation.SNOW || biomesToAddTo.contains(id)) && !CONFIG.filteredBiomes.contains(id.toString());
 	}
 
