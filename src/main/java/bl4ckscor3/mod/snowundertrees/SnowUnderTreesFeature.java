@@ -1,7 +1,5 @@
 package bl4ckscor3.mod.snowundertrees;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 
 import net.minecraft.block.BlockState;
@@ -12,9 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
 public class SnowUnderTreesFeature extends Feature<DefaultFeatureConfig>
 {
@@ -24,8 +22,10 @@ public class SnowUnderTreesFeature extends Feature<DefaultFeatureConfig>
 	}
 
 	@Override
-	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config)
+	public boolean generate(FeatureContext<DefaultFeatureConfig> context)
 	{
+		BlockPos pos = context.getOrigin();
+		StructureWorldAccess world = context.getWorld();
 		BlockPos.Mutable mPos = new BlockPos.Mutable();
 
 		for(int xi = 0; xi < 16; xi++)

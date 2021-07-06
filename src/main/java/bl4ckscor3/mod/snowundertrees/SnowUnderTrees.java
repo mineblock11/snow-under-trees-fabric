@@ -44,7 +44,7 @@ public class SnowUnderTrees implements ModInitializer
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> AutoConfig.getConfigHolder(Configuration.class).load());
 
 		Registry.register(Registry.FEATURE, new Identifier(MODID, "snow_under_trees"), SNOW_UNDER_TREES_FEATURE);
-		RegistryKey<ConfiguredFeature<?, ?>> snowUnderTrees = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, new Identifier(MODID, "snow_under_trees"));
+		RegistryKey<ConfiguredFeature<?, ?>> snowUnderTrees = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, new Identifier(MODID, "snow_under_trees"));
 		Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, snowUnderTrees.getValue(), SNOW_UNDER_TREES_CONFIGURED);
 
 		ServerTickEvents.START_WORLD_TICK.register(WorldTickHandler::onWorldTick);
