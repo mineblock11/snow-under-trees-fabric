@@ -7,12 +7,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyBlock;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.WorldChunk;
@@ -34,7 +34,7 @@ public class WorldTickHandler
 					int chunkY = chunkPos.getStartZ();
 					BlockPos randomPos = world.getRandomPosInChunk(chunkX, 0, chunkY, 15);
 					Biome biome = world.getBiome(randomPos).value();
-					boolean biomeDisabled = SnowUnderTrees.CONFIG.filteredBiomes.contains(world.getRegistryManager().get(Registry.BIOME_KEY).getKey(biome).toString());
+					boolean biomeDisabled = SnowUnderTrees.CONFIG.filteredBiomes.contains(world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome).toString());
 
 					if (!biomeDisabled && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 					{
