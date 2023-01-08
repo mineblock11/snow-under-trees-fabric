@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "id": "snowundertrees",
   "version": "${version}",
-
   "name": "Snow Under Trees",
   "description": "Adds snow under trees in snowy biomes.",
   "authors": [
     "DeadlyMC",
-    "bl4ckscor3"
+    "bl4ckscor3",
+    "mineblock11"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/snow-under-trees-fabric",
-    "sources": "https://github.com/DeadlyMC/snow-under-trees-fabric",
-    "issues": "https://github.com/DeadlyMC/snow-under-trees-fabric/issues"
+    "homepage": "https://mineblock11.dev/",
+    "sources": "https://github.com/mineblock11/snow-under-trees-fabric",
+    "issues": "https://github.com/mineblock11/snow-under-trees-fabric/issues"
   },
 
   "license": "MIT",
@@ -27,15 +27,10 @@
   "mixins": [
     "snowundertrees.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",
-    "minecraft": "1.17.x",
-    "cloth-config2": "*",
-    "java": ">=16"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "minecraft": "1.18.x",
+    "cloth-config2": "*"
   }
 }

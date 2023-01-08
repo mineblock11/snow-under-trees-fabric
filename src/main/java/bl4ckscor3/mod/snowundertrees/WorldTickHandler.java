@@ -33,7 +33,7 @@ public class WorldTickHandler
 					int chunkX = chunkPos.getStartX();
 					int chunkY = chunkPos.getStartZ();
 					BlockPos randomPos = world.getRandomPosInChunk(chunkX, 0, chunkY, 15);
-					Biome biome = world.getBiome(randomPos);
+					Biome biome = world.getBiome(randomPos).value();
 					boolean biomeDisabled = SnowUnderTrees.CONFIG.filteredBiomes.contains(world.getRegistryManager().get(Registry.BIOME_KEY).getKey(biome).toString());
 
 					if (!biomeDisabled && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)

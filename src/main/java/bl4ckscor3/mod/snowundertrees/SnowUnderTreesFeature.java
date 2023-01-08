@@ -41,7 +41,7 @@ public class SnowUnderTreesFeature extends Feature<DefaultFeatureConfig>
 				{
 					mPos.set(x, world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
 
-					if(world.getBiome(mPos).canSetSnow(world, mPos))
+					if(world.getBiome(mPos).value().canSetSnow(world, mPos))
 					{
 						BlockState stateBelow;
 
