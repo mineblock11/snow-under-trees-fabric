@@ -1,4 +1,4 @@
-package bl4ckscor3.mod.snowundertrees.data;
+package com.mineblock.snowundertrees.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;

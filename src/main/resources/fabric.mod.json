@@ -21,19 +21,18 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "bl4ckscor3.mod.snowundertrees.SnowUnderTrees"
+      "com.mineblock.snowundertrees.SnowUnderTrees"
     ],
     "fabric-datagen": [
-      "bl4ckscor3.mod.snowundertrees.data.SnowUnderTreesDatagen"
+      "com.mineblock.snowundertrees.data.SnowUnderTreesDatagen"
     ]
   },
   "mixins": [
     "snowundertrees.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.14.12",
     "fabric": "*",
-    "minecraft": "1.19.3",
-    "cloth-config2": "*"
+    "minecraft": "1.19.3"
   }
 }

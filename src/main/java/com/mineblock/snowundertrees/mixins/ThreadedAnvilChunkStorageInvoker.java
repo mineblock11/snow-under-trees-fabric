@@ -1,4 +1,4 @@
-package bl4ckscor3.mod.snowundertrees.mixins;
+package com.mineblock.snowundertrees.mixins;
 
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ThreadedAnvilChunkStorage;

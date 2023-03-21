@@ -1,4 +1,4 @@
-package bl4ckscor3.mod.snowundertrees;
+package com.mineblock.snowundertrees;
 
 import com.mojang.serialization.Codec;
 

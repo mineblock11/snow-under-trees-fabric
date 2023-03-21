@@ -1,6 +1,6 @@
-package bl4ckscor3.mod.snowundertrees.data;
+package com.mineblock.snowundertrees.data;
 
-import bl4ckscor3.mod.snowundertrees.SnowUnderTrees;
+import com.mineblock.snowundertrees.SnowUnderTrees;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.registry.RegistryBuilder;

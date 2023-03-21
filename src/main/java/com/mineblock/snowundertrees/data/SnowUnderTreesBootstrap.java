@@ -1,7 +1,7 @@
-package bl4ckscor3.mod.snowundertrees.data;
+package com.mineblock.snowundertrees.data;
 
 
-import bl4ckscor3.mod.snowundertrees.SnowUnderTrees;
+import com.mineblock.snowundertrees.SnowUnderTrees;
 
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKeys;

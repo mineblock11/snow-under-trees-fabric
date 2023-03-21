@@ -1,0 +1,6 @@
+{
+  "text.config.snowundertrees.title": "Snow Under Trees Config",
+  "text.config.snowundertrees.option.enableBiomeFeature": "Enable Generation",
+  "text.config.snowundertrees.option.enableWhenSnowing": "Generate When Snowing",
+  "text.config.snowundertrees.option.filteredBiomes": "Supported Biomes"
+}

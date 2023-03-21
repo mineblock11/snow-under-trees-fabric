@@ -1,8 +1,9 @@
-package bl4ckscor3.mod.snowundertrees;
+package com.mineblock.snowundertrees;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import bl4ckscor3.mod.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
+import com.mineblock.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
@@ -21,7 +22,7 @@ public class WorldTickHandler
 {
 	public static void onWorldTick(ServerWorld world)
 	{
-		if (world.isRaining() && SnowUnderTrees.CONFIG.enableWhenSnowing)
+		if (world.isRaining() )//&& SnowUnderTrees.CONFIG.enableWhenSnowing)
 		{
 			((ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage).invokeEntryIterator().forEach(chunkHolder -> {
 				Optional<WorldChunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
@@ -34,9 +35,12 @@ public class WorldTickHandler
 					int chunkY = chunkPos.getStartZ();
 					BlockPos randomPos = world.getRandomPosInChunk(chunkX, 0, chunkY, 15);
 					Biome biome = world.getBiome(randomPos).value();
-					boolean biomeDisabled = SnowUnderTrees.CONFIG.filteredBiomes.contains(world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome).toString());
+					var optionalKey = world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome);
+					AtomicBoolean biomeDisabled = new AtomicBoolean(true);
 
-					if (!biomeDisabled && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
+					optionalKey.ifPresent((key) -> biomeDisabled.set(SnowUnderTrees.CONFIG.filteredBiomes().contains(key.getValue().toString())));
+
+					if (!biomeDisabled.get() && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 					{
 						BlockPos pos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPos);
 						BlockState state = world.getBlockState(pos);
