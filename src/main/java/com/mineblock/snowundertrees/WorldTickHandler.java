@@ -22,7 +22,7 @@ public class WorldTickHandler
 {
 	public static void onWorldTick(ServerWorld world)
 	{
-		if (world.isRaining() )//&& SnowUnderTrees.CONFIG.enableWhenSnowing)
+		if (world.isRaining() && SnowUnderTrees.CONFIG.enableWhenSnowing())
 		{
 			((ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage).invokeEntryIterator().forEach(chunkHolder -> {
 				Optional<WorldChunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
