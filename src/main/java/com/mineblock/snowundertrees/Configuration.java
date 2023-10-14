@@ -15,7 +15,7 @@ public class Configuration
 {
 	public boolean enableBiomeFeature = true;
 	public boolean enableWhenSnowing = true;
-	public List<String> filteredBiomes = List.of(
+	public List<String> supportedBiomes = List.of(
 			"minecraft:snowy_plains",
 			"minecraft:ice_spikes",
 			"minecraft:snowy_taiga",

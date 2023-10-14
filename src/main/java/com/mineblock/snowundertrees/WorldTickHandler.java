@@ -38,7 +38,7 @@ public class WorldTickHandler
 					var optionalKey = world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome);
 					AtomicBoolean biomeDisabled = new AtomicBoolean(true);
 
-					optionalKey.ifPresent((key) -> biomeDisabled.set(SnowUnderTrees.CONFIG.filteredBiomes().contains(key.getValue().toString())));
+					optionalKey.ifPresent((key) -> biomeDisabled.set(SnowUnderTrees.CONFIG.supportedBiomes().contains(key.getValue().toString())));
 
 					if (!biomeDisabled.get() && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 					{

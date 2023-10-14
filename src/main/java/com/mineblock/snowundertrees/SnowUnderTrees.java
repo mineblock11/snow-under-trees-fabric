@@ -37,6 +37,6 @@ public class SnowUnderTrees implements ModInitializer
 	private boolean shouldAddSnow(Biome biome, RegistryKey<Biome> key)
 	{
 		Identifier id = key.getValue();
-		return CONFIG.enableBiomeFeature() && CONFIG.filteredBiomes().contains(id.toString());
+		return CONFIG.enableBiomeFeature() && CONFIG.supportedBiomes().contains(id.toString());
 	}
 }
