@@ -25,6 +25,9 @@
     ],
     "fabric-datagen": [
       "com.mineblock.snowundertrees.data.SnowUnderTreesDatagen"
+    ],
+    "modmenu": [
+      "com.mineblock.snowundertrees.compat.ModMenuEntrypoint"
     ]
   },
   "mixins": [
@@ -33,6 +36,7 @@
   "depends": {
     "fabricloader": ">=0.14.12",
     "fabric": "*",
-    "minecraft": ">=1.20"
+    "mru": ">=0.4.0+1.20.2",
+    "minecraft": ">=1.20.2"
   }
 }

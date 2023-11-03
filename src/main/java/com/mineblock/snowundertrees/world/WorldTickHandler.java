@@ -1,9 +1,11 @@
-package com.mineblock.snowundertrees;
+package com.mineblock.snowundertrees.world;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.mineblock.snowundertrees.config.SnowUnderTreesConfig;
 import com.mineblock.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
@@ -20,9 +22,14 @@ import net.minecraft.world.chunk.WorldChunk;
 
 public class WorldTickHandler
 {
+	public static void register()
+	{
+		ServerTickEvents.START_WORLD_TICK.register(WorldTickHandler::onWorldTick);
+	}
+
 	public static void onWorldTick(ServerWorld world)
 	{
-		if (world.isRaining() && SnowUnderTrees.CONFIG.enableWhenSnowing())
+		if (world.isRaining() && SnowUnderTreesConfig.get().enableWhenSnowing)
 		{
 			((ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage).invokeEntryIterator().forEach(chunkHolder -> {
 				Optional<WorldChunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
@@ -38,7 +45,7 @@ public class WorldTickHandler
 					var optionalKey = world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome);
 					AtomicBoolean biomeDisabled = new AtomicBoolean(true);
 
-					optionalKey.ifPresent((key) -> biomeDisabled.set(SnowUnderTrees.CONFIG.supportedBiomes().contains(key.getValue().toString())));
+					optionalKey.ifPresent((key) -> biomeDisabled.set(SnowUnderTreesConfig.get().supportedBiomes.contains(key.getValue().toString())));
 
 					if (!biomeDisabled.get() && world.getBlockState(world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPos).down()).getBlock() instanceof LeavesBlock)
 					{

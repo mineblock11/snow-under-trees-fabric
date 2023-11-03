@@ -12,8 +12,15 @@ class WorldgenProvider extends FabricDynamicRegistryProvider {
         super(output, registriesFuture);
     }
 
+    /**
+     * This method is called by the Fabric Datagen module to generate data.
+     * @param registries a {@link RegistryWrapper.WrapperLookup} instance
+     * @param entries a {@link net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider.Entries} instance
+     */
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
+
+        // Add all the registries we want to generate data for here.
         entries.addAll(registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE));
         entries.addAll(registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE));
         entries.addAll(registries.getWrapperOrThrow(RegistryKeys.BIOME));
@@ -24,6 +31,6 @@ class WorldgenProvider extends FabricDynamicRegistryProvider {
 
     @Override
     public String getName() {
-        return "Example Mod World gen";
+        return "Snow Under Trees World Generation";
     }
 }

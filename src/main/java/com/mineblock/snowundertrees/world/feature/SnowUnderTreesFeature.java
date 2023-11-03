@@ -1,4 +1,4 @@
-package com.mineblock.snowundertrees;
+package com.mineblock.snowundertrees.world.feature;
 
 import com.mojang.serialization.Codec;
 
