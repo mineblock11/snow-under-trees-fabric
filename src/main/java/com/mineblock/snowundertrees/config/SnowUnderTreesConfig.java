@@ -36,7 +36,31 @@ public class SnowUnderTreesConfig {
             "minecraft:snowy_beach",
             "minecraft:snowy_slopes",
             "minecraft:jagged_peaks",
-            "minecraft:frozen_peaks"
+            "minecraft:frozen_peaks",
+            "biomesoplenty:auroral_garden",
+            "biomesoplenty:muskeg",
+            "biomesoplenty:snowy_fir_clearing",
+            "biomesoplenty:snowy_coniferous_forest",
+            "biomesoplenty:fir_clearing",
+            "biomesoplenty:coniferous_forest",
+            "terralith:alpha_islands_winter",
+            "terralith:alpine_grove",
+            "terralith:emerald_peaks",
+            "terralith:frozen_cliffs",
+            "terralith:glacial_chasm",
+            "terralith:rocky_shrubland",
+            "terralith:scarlet_mountains",
+            "terralith:skylands_winter",
+            "terralith:snowy_badlands",
+            "terralith:snowy_cherry_grove",
+            "terralith:snowy_maple_forest",
+            "terralith:snowy_shield",
+            "terralith:wintry_forest",
+            "terralith:wintry_lowlands",
+            "byg:cardinal_tundra",
+            "byg:shattered_glacier",
+            "byg:frosted_taiga",
+            "byg:frosted_coniferous_forest"
     );
 
     public static SnowUnderTreesConfig get() {

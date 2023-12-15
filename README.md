@@ -14,6 +14,12 @@ Adds snow under trees in snowy biomes, making the biomes more immersive.
 
 ![](https://cdn.mineblock11.dev/snow_under_trees_showcase_config.png)
 
+## Compatability
+
+Snow Under Trees is compatible with:
+
+- [Terralith](https://modrinth.com/mod/terralith)
+- [Biomes O' Plenty](https://modrinth.com/mod/biomes-o-plenty)
 
 ## Showcase
 
