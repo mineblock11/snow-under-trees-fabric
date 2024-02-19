@@ -57,7 +57,18 @@ public class SnowUnderTreesConfig {
             "byg:cardinal_tundra",
             "byg:shattered_glacier",
             "byg:frosted_taiga",
-            "byg:frosted_coniferous_forest"
+            "byg:frosted_coniferous_forest",
+            "traverse:snowy_coniferous_forest",
+            "traverse:snowy_coniferous_wooded_hills",
+            "traverse:snowy_high_coniferous_forest",
+            "woods_and_mires:snowy_fell",
+            "woods_and_mires:snowy_pine_forest",
+            "regions_unexplored:cold_deciduous_forest",
+            "regions_unexplored:cold_boreal_taiga",
+            "regions_unexplored:icy_heights",
+            "regions_unexplored:frozen_pine_taiga",
+            "regions_unexplored:frozen_tundra",
+            "regions_unexplored:spires"
     );
 
     public static SnowUnderTreesConfig get() {
