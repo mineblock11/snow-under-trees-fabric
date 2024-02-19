@@ -1,27 +1,40 @@
 {
   "schemaVersion": 1,
-  "id": "example",
+  "id": "snowundertrees",
   "version": "${mod_version}",
-  "name": "Example Mod",
-  "description": "Lorum ipsum nadara un petit mozrango.",
+  "name": "Snow Under Trees",
+  "description": "Adds snow under trees in snowy biomes.",
   "authors": [
-    "IMB11"
+    "IMB11 (mineblock11)",
+    "DeadlyMC",
+    "bl4ckscor3"
   ],
-  "license": "ARR",
-  "icon": "assets/example/icon.png",
   "contact": {
-    "homepage": "https://imb11.dev/",
-    "sources": "https://github.com/IMB11/repo",
-    "issues": "https://github.com/IMB11/repo"
+    "homepage": "https://IMB11.dev/",
+    "sources": "https://github.com/IMB11/SnowUnderTrees",
+    "issues": "https://github.com/IMB11/SnowUnderTrees/issues"
   },
+  "license": "ARR",
+  "icon": "assets/snowundertrees/icon.png",
   "environment": "*",
-  "accessWidener" : "example.accesswidener",
+  "entrypoints": {
+    "main": [
+      "dev.imb11.snowundertrees.SnowUnderTrees"
+    ],
+    "fabric-datagen": [
+      "dev.imb11.snowundertrees.data.SnowUnderTreesDatagen"
+    ],
+    "modmenu": [
+      "dev.imb11.snowundertrees.compat.ModMenuEntrypoint"
+    ]
+  },
   "mixins": [
-    "example.mixins.json"
+    "snowundertrees.mixins.json"
   ],
   "depends": {
     "fabric": "*",
-    "fabricloader": "*",
-    "minecraft": "${target_minecraft}"
+    "fabricloader": ">=${target_fabricloader}",
+    "minecraft": "${target_minecraft}",
+    "mru": ">=${target_mru}"
   }
 }

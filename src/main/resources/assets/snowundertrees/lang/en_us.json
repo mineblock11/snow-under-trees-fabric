@@ -1,0 +1,9 @@
+{
+  "snowundertrees.config.title": "Snow Under Trees Config",
+  "snowundertrees.config.enableBiomeFeature": "Enable Generation",
+  "snowundertrees.config.enableBiomeFeature.desc": "If disabled, no snow will be generated under trees.",
+  "snowundertrees.config.enableWhenSnowing": "Generate When Snowing",
+  "snowundertrees.config.enableWhenSnowing.desc": "If disabled, snow will not be generated under trees when it is snowing.",
+  "snowundertrees.config.supportedBiomes": "Supported Biomes",
+  "snowundertrees.config.supportedBiomes.desc": "A list of biome IDs that will have snow generated under trees."
+}
