@@ -76,7 +76,8 @@ public class SnowUnderTreesConfig {
             "wilderwild:frozen_caves",
             "wilderwild:snowy_dying_forest",
             "wilderwild:snowy_dying_mixed_forest",
-            "wilderwild:snowy_old_growth_pine_taiga"
+            "wilderwild:snowy_old_growth_pine_taiga",
+            "promenade:glacarian_taiga"
     );
 
     public static SnowUnderTreesConfig get() {
