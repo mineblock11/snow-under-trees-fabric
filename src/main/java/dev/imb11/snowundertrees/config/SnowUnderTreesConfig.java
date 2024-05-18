@@ -72,7 +72,11 @@ public class SnowUnderTreesConfig {
             "terrestria:snowy_hemlock_forest",
             "terrestria:snowy_hemlock_clearing",
             "terrestria:caldera",
-            "terrestria:caldera_foothils"
+            "terrestria:caldera_foothils",
+            "wilderwild:frozen_caves",
+            "wilderwild:snowy_dying_forest",
+            "wilderwild:snowy_dying_mixed_forest",
+            "wilderwild:snowy_old_growth_pine_taiga"
     );
 
     public static SnowUnderTreesConfig get() {
