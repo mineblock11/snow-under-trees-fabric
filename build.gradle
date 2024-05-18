@@ -1,9 +1,10 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
-version =  property("mod.version") + "+" + stonecutter.current.version
+var mcVersion = stonecutter.current.version
+version =  property("mod.version") + "+" + mcVersion
 group = "dev.imb11"
 
 base {
@@ -30,8 +31,19 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${property('deps.fabric_loader')}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${property('deps.fabric')}"
 
-    include modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${property('deps.yacl')}")
-    modImplementation "com.mineblock11:MRU:${property('deps.mru')}"
+    if (mcVersion > "1.20.4") {
+        include modImplementation("dev.isxander:yet-another-config-lib:${property('deps.yacl')}") {
+            // Remove any fabric API modules.
+            exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+        }
+    } else {
+        include modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${property('deps.yacl')}")
+    }
+
+    modImplementation ("com.mineblock11:MRU:${property('deps.mru')}") {
+        // Exclude YACL.
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     modRuntimeOnly modCompileOnly("com.terraformersmc:modmenu:${property('deps.modmenu')}")
 }
@@ -89,29 +101,14 @@ java {
     // If you remove this line, sources will not be generated.
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    var version = (mcVersion > "1.20.4") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+
+    sourceCompatibility = version
+    targetCompatibility = version
 }
 
 jar {
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName.get()}"}
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
     }
 }

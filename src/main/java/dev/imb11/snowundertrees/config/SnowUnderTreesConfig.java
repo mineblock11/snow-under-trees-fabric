@@ -68,7 +68,11 @@ public class SnowUnderTreesConfig {
             "regions_unexplored:icy_heights",
             "regions_unexplored:frozen_pine_taiga",
             "regions_unexplored:frozen_tundra",
-            "regions_unexplored:spires"
+            "regions_unexplored:spires",
+            "terrestria:snowy_hemlock_forest",
+            "terrestria:snowy_hemlock_clearing",
+            "terrestria:caldera",
+            "terrestria:caldera_foothils"
     );
 
     public static SnowUnderTreesConfig get() {
