@@ -12,6 +12,7 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyBlock;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ChunkHolder;
+import net.minecraft.server.world.OptionalChunk;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -32,11 +33,13 @@ public class WorldTickHandler
 		if (world.isRaining() && SnowUnderTreesConfig.get().enableWhenSnowing)
 		{
 			((ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage).invokeEntryIterator().forEach(chunkHolder -> {
-				Optional<WorldChunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
+				OptionalChunk<WorldChunk> optional = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK);
 
 				if (optional.isPresent() && world.random.nextInt(16) == 0)
 				{
-					WorldChunk chunk = optional.get();
+					WorldChunk chunk = optional.orElse(null);
+					if(chunk == null) return;
+
 					ChunkPos chunkPos = chunk.getPos();
 					int chunkX = chunkPos.getStartX();
 					int chunkY = chunkPos.getStartZ();
