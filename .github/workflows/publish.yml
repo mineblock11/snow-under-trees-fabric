@@ -20,7 +20,10 @@ jobs:
         with:
           gradle-version: "wrapper"
       - name: Build JARs
-        run: "gradle chiseledBuild"
+        uses: Wandalen/wretry.action@master
+        with:
+          command: "gradle chiseledBuild"
+          attempt_limit: 3
       - name: Upload Built JARs
         uses: actions/upload-artifact@v4
         with:
