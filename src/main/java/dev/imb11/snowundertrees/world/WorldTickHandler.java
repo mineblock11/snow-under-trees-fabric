@@ -9,7 +9,6 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyBlock;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ChunkHolder;
-import net.minecraft.server.world.OptionalChunk;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +16,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.WorldChunk;
+
+/*? if >1.20.4 { *//*
+import net.minecraft.server.world.OptionalChunk;
+*//*? } */
 
 import java.util.Optional;
 
@@ -33,11 +36,11 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
     }
 
     private void processChunk(ServerWorld world, ChunkHolder chunkHolder) {
-        /*? if <1.20.5 { *//*
+        /*? if <1.20.5 { */
         Optional<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
-        *//*? } else { */
+        /*? } else { *//*
         OptionalChunk<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK);
-        /*? } */
+        *//*? } */
 
         if (optionalChunk.isPresent() && shouldProcessChunk(world)) {
             WorldChunk chunk = optionalChunk.orElse(null);
