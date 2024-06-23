@@ -72,13 +72,15 @@ processResources {
                 'target_mru': project.property('deps.mru'),
                 'target_fabricloader': project.property('deps.fabric_loader')
     }
+
+    //    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 sourceSets {
     main {
         resources {
             srcDirs += [
-                    rootProject.file('src/main/generated')
+                    file('src/main/generated')
             ]
         }
     }
