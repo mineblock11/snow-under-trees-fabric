@@ -77,7 +77,20 @@ public class SnowUnderTreesConfig {
             "wilderwild:snowy_dying_forest",
             "wilderwild:snowy_dying_mixed_forest",
             "wilderwild:snowy_old_growth_pine_taiga",
-            "promenade:glacarian_taiga"
+            "promenade:glacarian_taiga",
+            "wythers:snowy_bog",
+            "wythers:snowy_canyon",
+            "wythers:snowy_fen",
+            "wythers:snowy_peaks",
+            "wythers:snowy_thermal_taiga",
+            "wythers:snowy_tundra",
+            "wythers:crimson_tundra",
+            "wythers:deep_snowy_taiga",
+            "wythers:highlands",
+            "wythers:icy_crags",
+            "wythers:icy_shore",
+            "wythers:icy_volcano",
+            "wythers:ice_cap"
     );
 
     public static SnowUnderTreesConfig get() {

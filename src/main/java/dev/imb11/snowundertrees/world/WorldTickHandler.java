@@ -17,9 +17,9 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.WorldChunk;
 
-/*? if >1.20.4 { *//*
+/*? if >1.20.4 {*/
 import net.minecraft.server.world.OptionalChunk;
-*//*? } */
+/*?}*/
 
 import java.util.Optional;
 
@@ -30,17 +30,21 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
             return;
         }
 
-        ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage;
+        /*? if <1.21 {*/
+        /*ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage;
+        *//*?} else {*/
+        ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().chunkLoadingManager;
+        /*?}*/
         Iterable<ChunkHolder> chunkHolders = chunkStorage.invokeEntryIterator();
         chunkHolders.forEach(chunkHolder -> processChunk(world, chunkHolder));
     }
 
     private void processChunk(ServerWorld world, ChunkHolder chunkHolder) {
-        /*? if <1.20.5 { */
-        Optional<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
-        /*? } else { *//*
+        /*? if <1.20.5 {*/
+        /*Optional<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
+        *//*?} else {*/
         OptionalChunk<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK);
-        *//*? } */
+        /*?}*/
 
         if (optionalChunk.isPresent() && shouldProcessChunk(world)) {
             WorldChunk chunk = optionalChunk.orElse(null);

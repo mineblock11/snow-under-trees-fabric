@@ -31,19 +31,12 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${property('deps.fabric_loader')}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${property('deps.fabric')}"
 
-    if (mcVersion > "1.20.4") {
-        include modImplementation("dev.isxander:yet-another-config-lib:${property('deps.yacl')}") {
-            // Remove any fabric API modules.
-            exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-        }
-    } else {
-        include modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${property('deps.yacl')}")
-    }
-
-    modImplementation ("com.mineblock11:MRU:${property('deps.mru')}") {
-        // Exclude YACL.
+    include modImplementation("dev.isxander:yet-another-config-lib:${property('deps.yacl')}") {
+        // Remove any fabric API modules.
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+
+    modImplementation ("com.mineblock11:MRU:${property('deps.mru')}")
 
     modRuntimeOnly modCompileOnly("com.terraformersmc:modmenu:${property('deps.modmenu')}")
 }
@@ -96,11 +89,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-
     var version = (mcVersion > "1.20.4") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
 
     sourceCompatibility = version
