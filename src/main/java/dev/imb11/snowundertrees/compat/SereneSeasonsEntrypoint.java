@@ -85,9 +85,9 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
         MELT_CHANCES.put(Season.SubSeason.EARLY_SUMMER, 4);
         MELT_CHANCES.put(Season.SubSeason.MID_SUMMER, 2);
         MELT_CHANCES.put(Season.SubSeason.LATE_SUMMER, 1);
-        MELT_CHANCES.put(Season.SubSeason.EARLY_AUTUMN, 2);
-        MELT_CHANCES.put(Season.SubSeason.MID_AUTUMN, 4);
-        MELT_CHANCES.put(Season.SubSeason.LATE_AUTUMN, 8);
+        MELT_CHANCES.put(Season.SubSeason.EARLY_AUTUMN, 8);
+        MELT_CHANCES.put(Season.SubSeason.MID_AUTUMN, 12);
+        MELT_CHANCES.put(Season.SubSeason.LATE_AUTUMN, 16);
     }
 
     private static boolean shouldMeltSnow(ServerWorld world, Season.SubSeason subSeason) {
