@@ -27,7 +27,7 @@ public class SnowUnderTreesFeature extends Feature<DefaultFeatureConfig> {
             return false;
         }
 
-        if(SnowUnderTreesConfig.get().respectSeasonMods) {
+        if(SnowUnderTreesConfig.get().respectSeasonMods && SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
             if(!SereneSeasonsEntrypoint.shouldPlaceSnow(context.getWorld().toServerWorld(), context.getOrigin())) {
                 return false;
             }

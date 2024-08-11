@@ -1,8 +1,9 @@
+
 package dev.imb11.snowundertrees.compat;
 
 import com.mineblock11.mru.entry.CompatabilityEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
-import dev.imb11.snowundertrees.mixins.ServerChunkLoadingManagerAccessor;
+import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,10 +15,13 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+//? >=1.20.4 {
 import sereneseasons.api.season.Season;
 import sereneseasons.api.season.SeasonHelper;
 import sereneseasons.init.ModConfig;
 import sereneseasons.season.SeasonHooks;
+//?}
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -31,21 +35,30 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     @Override
     public void initialize() {
         LOGGER.info("Serene Seasons detected!");
-        isSereneSeasonsLoaded = true;
 
+        //? >=1.20.4 {
+        isSereneSeasonsLoaded = true;
         ServerTickEvents.END_WORLD_TICK.register(SereneSeasonsEntrypoint::attemptMeltSnow);
+        //?}
     }
 
+    //? >=1.20.4 {
     private static void attemptMeltSnow(ServerWorld serverWorld) {
         if (!isWinter(serverWorld) || !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
         if (!shouldMeltSnow(serverWorld, SeasonHelper.getSeasonState(serverWorld).getSubSeason())) return;
 
         var chunkManager = serverWorld.getChunkManager();
-        var chunks = ((ServerChunkLoadingManagerAccessor) chunkManager.chunkLoadingManager).getEntryIterator();
+        /*? if <1.21 {*/
+        /*ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) serverWorld.getChunkManager().threadedAnvilChunkStorage;
+        *//*?} else {*/
+        ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) serverWorld.getChunkManager().chunkLoadingManager;
+         /*?}*/
+
+        var chunks = chunkStorage.invokeEntryIterator();
 
         StreamSupport.stream(chunks.spliterator(), true)
                 .map(chunk -> serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15))
-                .filter(randomPosition -> SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getIdAsString()))
+                .filter(randomPosition -> SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getKey().get().getValue().toString()))
                 .map(randomPosition -> {
                     BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
                     BlockState blockState = serverWorld.getBlockState(heightmapPosition);
@@ -99,7 +112,9 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     public static boolean isWinter(World world) {
         return SeasonHelper.getSeasonState(world).getSeason() == Season.WINTER;
     }
+    //?}
 
+    //? >=1.20.4 {
     public static boolean shouldPlaceSnow(World world, BlockPos pos) {
         if (isSereneSeasonsLoaded) {
             return ModConfig.seasons.generateSnowAndIce && SeasonHooks.coldEnoughToSnowSeasonal(world, pos);
@@ -107,4 +122,9 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
             return false;
         }
     }
+    //?} else {
+    /*public static boolean shouldPlaceSnow(World world, BlockPos pos) {
+        return true;
+    }
+    *///?}
 }
