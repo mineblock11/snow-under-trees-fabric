@@ -26,6 +26,9 @@
     ],
     "modmenu": [
       "dev.imb11.snowundertrees.compat.ModMenuEntrypoint"
+    ],
+    "mru-compat-sereneseasons": [
+      "dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint"
     ]
   },
   "mixins": [
@@ -35,6 +38,6 @@
     "fabric": "*",
     "fabricloader": ">=${target_fabricloader}",
     "minecraft": "${target_minecraft}",
-    "mru": ">=${target_mru}"
+    "mru": "~${target_mru}"
   }
 }

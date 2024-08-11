@@ -26,6 +26,9 @@ public class SnowUnderTreesConfig {
     public boolean enableWhenSnowing = true;
 
     @SerialEntry
+    public boolean respectSeasonMods = true;
+
+    @SerialEntry
     public List<String> supportedBiomes = List.of(
             "minecraft:snowy_plains",
             "minecraft:ice_spikes",
@@ -126,6 +129,13 @@ public class SnowUnderTreesConfig {
                     .binding(defaults.supportedBiomes, () -> config.supportedBiomes, (v) -> config.supportedBiomes = v)
                     .build();
 
+            var respectSeasonModsOption = Option.<Boolean>createBuilder()
+                    .name(HELPER.getName("respectSeasonMods"))
+                    .description(HELPER.description("respectSeasonMods", true))
+                    .binding(defaults.respectSeasonMods, () -> config.respectSeasonMods, (v) -> config.respectSeasonMods = v)
+                    .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
+                    .build();
+
             var enableBiomeFeatureOption = Option.<Boolean>createBuilder()
                     .name(HELPER.getName("enableBiomeFeature"))
                     .description(HELPER.description("enableBiomeFeature", true))
@@ -133,6 +143,7 @@ public class SnowUnderTreesConfig {
                     .listener((opt, val) -> {
                         enableWhenSnowingOption.setAvailable(val);
                         supportedBiomesOption.setAvailable(val);
+                        respectSeasonModsOption.setAvailable(val);
                     })
                     .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
                     .build();
@@ -143,7 +154,8 @@ public class SnowUnderTreesConfig {
                             .name(Text.translatable("snowundertrees.config.title"))
                             .options(List.of(
                                     enableBiomeFeatureOption,
-                                    enableWhenSnowingOption
+                                    enableWhenSnowingOption,
+                                    respectSeasonModsOption
                             ))
                             .group(supportedBiomesOption)
                             .build());

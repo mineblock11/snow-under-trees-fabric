@@ -1,6 +1,7 @@
 package dev.imb11.snowundertrees.world.feature;
 
 import com.mojang.serialization.Codec;
+import dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,6 +25,12 @@ public class SnowUnderTreesFeature extends Feature<DefaultFeatureConfig> {
     public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
         if (!SnowUnderTreesConfig.get().enableBiomeFeature) {
             return false;
+        }
+
+        if(SnowUnderTreesConfig.get().respectSeasonMods) {
+            if(!SereneSeasonsEntrypoint.shouldPlaceSnow(context.getWorld().toServerWorld())) {
+                return false;
+            }
         }
 
         BlockPos origin = context.getOrigin();

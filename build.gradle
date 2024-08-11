@@ -22,6 +22,19 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://maven.quiltmc.org/repository/release" }
     maven { url 'https://maven.terraformersmc.com/releases' }
+    maven { url 'https://maven.minecraftforge.net/releases/' }
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -39,6 +52,11 @@ dependencies {
     modImplementation ("com.mineblock11:MRU:${property('deps.mru')}")
 
     modRuntimeOnly modCompileOnly("com.terraformersmc:modmenu:${property('deps.modmenu')}")
+
+    if (stonecutter.eval(mcVersion, ">1.20.1")) {
+        modRuntimeOnly modCompileOnly("maven.modrinth:serene-seasons:${property('deps.serene_seasons')}")
+        modRuntimeOnly modCompileOnly("com.github.glitchfiend:GlitchCore-fabric:${mcVersion}-${property('deps.glitchcore')}")
+    }
 }
 
 if (stonecutter.current.active) { // run configs for non-active version would be invalid
@@ -91,7 +109,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-    var version = (mcVersion > "1.20.4") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+    var version = stonecutter.eval(mcVersion, ">1.20.4") ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
 
     sourceCompatibility = version
     targetCompatibility = version
