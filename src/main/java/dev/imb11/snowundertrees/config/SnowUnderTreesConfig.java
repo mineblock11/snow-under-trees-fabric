@@ -92,7 +92,13 @@ public class SnowUnderTreesConfig {
             "wythers:icy_crags",
             "wythers:icy_shore",
             "wythers:icy_volcano",
-            "wythers:ice_cap"
+            "wythers:ice_cap",
+            "sensible:snowy_woodland",
+            "cynic:snowy_dark_forest",
+            "cynic:snowy_forest",
+            "cynic:snowy_forest_strand",
+            "cynic:snowy_stony_shore",
+            "cynic:snowy_strand"
     );
 
     @SerialEntry
