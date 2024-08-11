@@ -5,7 +5,9 @@
   "snowundertrees.config.enableWhenSnowing": "Generate When Snowing",
   "snowundertrees.config.enableWhenSnowing.desc": "If disabled, snow will not be generated under trees when it is snowing.",
   "snowundertrees.config.respectSeasonMods": "Respect Season Mods",
-    "snowundertrees.config.respectSeasonMods.desc": "If enabled, Snow Under Trees will respect season mods - snow will only generate during winter.",
+  "snowundertrees.config.respectSeasonMods.desc": "If enabled, Snow Under Trees will respect season mods - snow will only generate during winter.",
+  "snowundertrees.config.meltSnowSeasonally": "Melt Snow Seasonally",
+  "snowundertrees.config.meltSnowSeasonally.desc": "If enabled, snow under trees will melt during spring, summer and autumn with variable melt-rates based on the season.",
   "snowundertrees.config.supportedBiomes": "Supported Biomes",
   "snowundertrees.config.supportedBiomes.desc": "A list of biome IDs that will have snow generated under trees."
 }
