@@ -1,29 +1,108 @@
 package dev.imb11.snowundertrees.compat;
 
 import com.mineblock11.mru.entry.CompatabilityEntrypoint;
+import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
+import dev.imb11.snowundertrees.mixins.ServerChunkLoadingManagerAccessor;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SnowyBlock;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sereneseasons.api.season.Season;
-import sereneseasons.init.ModAPI;
+import sereneseasons.api.season.SeasonHelper;
 import sereneseasons.init.ModConfig;
-import sereneseasons.season.SeasonHandler;
+import sereneseasons.season.SeasonHooks;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.StreamSupport;
 
 public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
-    private @Nullable static SeasonHandler seasonHandler;
     public static boolean isSereneSeasonsLoaded = false;
+
     @Override
     public void initialize() {
         LOGGER.info("Serene Seasons detected!");
         isSereneSeasonsLoaded = true;
-        seasonHandler = new SeasonHandler();
+
+        ServerTickEvents.END_WORLD_TICK.register(SereneSeasonsEntrypoint::attemptMeltSnow);
     }
 
-    public static boolean shouldPlaceSnow(World world) {
-        if(isSereneSeasonsLoaded) {
-            return ModConfig.seasons.generateSnowAndIce && seasonHandler.getServerSeasonState(world).getSeason() == Season.WINTER;
+    private static void attemptMeltSnow(ServerWorld serverWorld) {
+        if (!isWinter(serverWorld) || !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
+        if (!shouldMeltSnow(serverWorld, SeasonHelper.getSeasonState(serverWorld).getSubSeason())) return;
+
+        var chunkManager = serverWorld.getChunkManager();
+        var chunks = ((ServerChunkLoadingManagerAccessor) chunkManager.chunkLoadingManager).getEntryIterator();
+
+        StreamSupport.stream(chunks.spliterator(), true)
+                .map(chunk -> serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15))
+                .filter(randomPosition -> SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getIdAsString()))
+                .map(randomPosition -> {
+                    BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
+                    BlockState blockState = serverWorld.getBlockState(heightmapPosition);
+                    return blockState.isIn(BlockTags.LEAVES) ? randomPosition : null;
+                })
+                .filter(Objects::nonNull)
+                .forEach(randomPosition -> {
+                    BlockPos pos = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPosition);
+                    if (!SeasonHooks.warmEnoughToRainSeasonal(serverWorld, pos)) {
+                        return;
+                    }
+
+                    BlockState before = serverWorld.getBlockState(pos);
+                    BlockState after = Blocks.AIR.getDefaultState();
+
+                    if (before == after) {
+                        return;
+                    }
+
+                    BlockPos downPos = pos.down();
+                    BlockState below = serverWorld.getBlockState(downPos);
+
+                    serverWorld.setBlockState(pos, after);
+
+                    if (below.contains(SnowyBlock.SNOWY)) {
+                        serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
+                    }
+                });
+    }
+
+    private static final Map<Season.SubSeason, Integer> MELT_CHANCES = new EnumMap<>(Season.SubSeason.class);
+
+    static {
+        MELT_CHANCES.put(Season.SubSeason.EARLY_SPRING, 16);
+        MELT_CHANCES.put(Season.SubSeason.MID_SPRING, 12);
+        MELT_CHANCES.put(Season.SubSeason.LATE_SPRING, 8);
+        MELT_CHANCES.put(Season.SubSeason.EARLY_SUMMER, 4);
+        MELT_CHANCES.put(Season.SubSeason.MID_SUMMER, 2);
+        MELT_CHANCES.put(Season.SubSeason.LATE_SUMMER, 1);
+        MELT_CHANCES.put(Season.SubSeason.EARLY_AUTUMN, 2);
+        MELT_CHANCES.put(Season.SubSeason.MID_AUTUMN, 4);
+        MELT_CHANCES.put(Season.SubSeason.LATE_AUTUMN, 8);
+    }
+
+    private static boolean shouldMeltSnow(ServerWorld world, Season.SubSeason subSeason) {
+        int chance = MELT_CHANCES.getOrDefault(subSeason, -1);
+        if (chance == -1) return false;
+        return world.random.nextInt(chance) == 0;
+    }
+
+    public static boolean isWinter(World world) {
+        return SeasonHelper.getSeasonState(world).getSeason() == Season.WINTER;
+    }
+
+    public static boolean shouldPlaceSnow(World world, BlockPos pos) {
+        if (isSereneSeasonsLoaded) {
+            return ModConfig.seasons.generateSnowAndIce && SeasonHooks.coldEnoughToSnowSeasonal(world, pos);
         } else {
             return false;
         }

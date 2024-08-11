@@ -1,6 +1,7 @@
 package dev.imb11.snowundertrees.config;
 
 import com.mineblock11.mru.config.YACLHelper;
+import dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
 import dev.isxander.yacl3.api.Option;
@@ -13,6 +14,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SnowUnderTreesConfig {
@@ -24,9 +26,6 @@ public class SnowUnderTreesConfig {
 
     @SerialEntry
     public boolean enableWhenSnowing = true;
-
-    @SerialEntry
-    public boolean respectSeasonMods = true;
 
     @SerialEntry
     public List<String> supportedBiomes = List.of(
@@ -96,6 +95,11 @@ public class SnowUnderTreesConfig {
             "wythers:ice_cap"
     );
 
+    @SerialEntry
+    public boolean respectSeasonMods = true;
+    @SerialEntry
+    public boolean meltSnowSeasonally = true;
+
     public static SnowUnderTreesConfig get() {
         return CONFIG_CLASS_HANDLER.instance();
     }
@@ -136,6 +140,13 @@ public class SnowUnderTreesConfig {
                     .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
                     .build();
 
+            var meltSnowSeasonallyOption = Option.<Boolean>createBuilder()
+                    .name(HELPER.getName("meltSnowSeasonally"))
+                    .description(HELPER.description("meltSnowSeasonally", true))
+                    .binding(defaults.meltSnowSeasonally, () -> config.meltSnowSeasonally, (v) -> config.meltSnowSeasonally = v)
+                    .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
+                    .build();
+
             var enableBiomeFeatureOption = Option.<Boolean>createBuilder()
                     .name(HELPER.getName("enableBiomeFeature"))
                     .description(HELPER.description("enableBiomeFeature", true))
@@ -144,19 +155,26 @@ public class SnowUnderTreesConfig {
                         enableWhenSnowingOption.setAvailable(val);
                         supportedBiomesOption.setAvailable(val);
                         respectSeasonModsOption.setAvailable(val);
+                        meltSnowSeasonallyOption.setAvailable(val);
                     })
                     .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
                     .build();
+
+            var options = new ArrayList(List.of(
+                    enableBiomeFeatureOption,
+                    enableWhenSnowingOption
+            ));
+
+            if (SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
+                options.add(respectSeasonModsOption);
+                options.add(meltSnowSeasonallyOption);
+            }
 
             return builder
                     .title(Text.translatable("snowundertrees.config.title"))
                     .category(ConfigCategory.createBuilder()
                             .name(Text.translatable("snowundertrees.config.title"))
-                            .options(List.of(
-                                    enableBiomeFeatureOption,
-                                    enableWhenSnowingOption,
-                                    respectSeasonModsOption
-                            ))
+                            .options(options)
                             .group(supportedBiomesOption)
                             .build());
         });
