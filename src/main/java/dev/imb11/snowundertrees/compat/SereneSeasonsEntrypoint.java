@@ -5,6 +5,7 @@ import com.mineblock11.mru.entry.CompatabilityEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SnowyBlock;
@@ -25,8 +26,6 @@ import sereneseasons.season.SeasonHooks;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.StreamSupport;
 
 public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
@@ -34,6 +33,8 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
 
     @Override
     public void initialize() {
+        if (!FabricLoader.getInstance().isModLoaded("sereneseasons")) return;
+
         LOGGER.info("Serene Seasons detected!");
 
         //? >=1.20.4 {
@@ -56,37 +57,39 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
 
         var chunks = chunkStorage.invokeEntryIterator();
 
-        StreamSupport.stream(chunks.spliterator(), true)
-                .map(chunk -> serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15))
-                .filter(randomPosition -> SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getKey().get().getValue().toString()))
-                .map(randomPosition -> {
-                    BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
-                    BlockState blockState = serverWorld.getBlockState(heightmapPosition);
-                    return blockState.isIn(BlockTags.LEAVES) ? randomPosition : null;
-                })
-                .filter(Objects::nonNull)
-                .forEach(randomPosition -> {
-                    BlockPos pos = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPosition);
-                    if (!SeasonHooks.warmEnoughToRainSeasonal(serverWorld, pos)) {
-                        return;
-                    }
+        for (var chunk : chunks) {
+            BlockPos randomPosition = serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
+            if (!SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getKey().get().getValue().toString())) {
+                continue;
+            }
 
-                    BlockState before = serverWorld.getBlockState(pos);
-                    BlockState after = Blocks.AIR.getDefaultState();
+            BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
+            BlockState blockState = serverWorld.getBlockState(heightmapPosition);
+            if (!blockState.isIn(BlockTags.LEAVES)) {
+                continue;
+            }
 
-                    if (before == after) {
-                        return;
-                    }
+            BlockPos pos = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, randomPosition);
+            if (!SeasonHooks.warmEnoughToRainSeasonal(serverWorld, pos)) {
+                continue;
+            }
 
-                    BlockPos downPos = pos.down();
-                    BlockState below = serverWorld.getBlockState(downPos);
+            BlockState before = serverWorld.getBlockState(pos);
+            BlockState after = Blocks.AIR.getDefaultState();
 
-                    serverWorld.setBlockState(pos, after);
+            if (before == after) {
+                continue;
+            }
 
-                    if (below.contains(SnowyBlock.SNOWY)) {
-                        serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
-                    }
-                });
+            BlockPos downPos = pos.down();
+            BlockState below = serverWorld.getBlockState(downPos);
+
+            serverWorld.setBlockState(pos, after);
+
+            if (below.contains(SnowyBlock.SNOWY)) {
+                serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
+            }
+        }
     }
 
     private static final Map<Season.SubSeason, Integer> MELT_CHANCES = new EnumMap<>(Season.SubSeason.class);
