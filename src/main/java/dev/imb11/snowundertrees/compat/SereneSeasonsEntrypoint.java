@@ -48,7 +48,6 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
         if (!isWinter(serverWorld) || !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
         if (!shouldMeltSnow(serverWorld, SeasonHelper.getSeasonState(serverWorld).getSubSeason())) return;
 
-        var chunkManager = serverWorld.getChunkManager();
         /*? if <1.21 {*/
         /*ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) serverWorld.getChunkManager().threadedAnvilChunkStorage;
         *//*?} else {*/
