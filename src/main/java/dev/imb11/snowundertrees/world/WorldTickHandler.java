@@ -80,10 +80,12 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
 
         boolean isSupported = SnowUnderTreesConfig.get().supportedBiomes.contains(biomeId.toString());
 
+        //? >=1.20.4 {
         if(SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
             return SereneSeasonsEntrypoint.isBiomeSuitable(world, chunk, biomeCheckPos, biome)
                     || isSupported;
         }
+        //?}
 
         return isSupported;
     }

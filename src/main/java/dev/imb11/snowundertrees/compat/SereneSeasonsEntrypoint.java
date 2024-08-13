@@ -33,9 +33,11 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
     public static boolean isSereneSeasonsLoaded = false;
 
+    //? >=1.20.4 {
     public static boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk, BlockPos biomeCheckPos, Biome biome) {
         return SeasonHooks.coldEnoughToSnowSeasonal(world, biomeCheckPos);
     }
+    //?}
 
     @Override
     public void initialize() {
