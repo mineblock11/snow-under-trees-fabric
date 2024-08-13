@@ -54,8 +54,8 @@ dependencies {
     modRuntimeOnly modCompileOnly("com.terraformersmc:modmenu:${property('deps.modmenu')}")
 
     if (stonecutter.eval(mcVersion, ">1.20.1")) {
-        modRuntimeOnly modCompileOnly("maven.modrinth:serene-seasons:${property('deps.serene_seasons')}")
-        modRuntimeOnly modCompileOnly("com.github.glitchfiend:GlitchCore-fabric:${mcVersion}-${property('deps.glitchcore')}")
+        modCompileOnly("maven.modrinth:serene-seasons:${property('deps.serene_seasons')}")
+        modCompileOnly("com.github.glitchfiend:GlitchCore-fabric:${mcVersion}-${property('deps.glitchcore')}")
     }
 }
 
