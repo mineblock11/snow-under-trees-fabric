@@ -1,5 +1,6 @@
 package dev.imb11.snowundertrees.world;
 
+import dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -72,11 +73,19 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
         return world.random.nextInt(4) == 0; // 25% chance for chunk processing
     }
 
-    private boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk) {
+    public static boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk) {
         BlockPos biomeCheckPos = world.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
         Biome biome = world.getBiome(biomeCheckPos).value();
         Identifier biomeId = world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome).get().getValue();
-        return SnowUnderTreesConfig.get().supportedBiomes.contains(biomeId.toString());
+
+        boolean isSupported = SnowUnderTreesConfig.get().supportedBiomes.contains(biomeId.toString());
+
+        if(SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
+            return SereneSeasonsEntrypoint.isBiomeSuitable(world, chunk, biomeCheckPos, biome)
+                    || isSupported;
+        }
+
+        return isSupported;
     }
 
     private BlockPos findRandomSurfacePosition(ServerWorld world, WorldChunk chunk) {

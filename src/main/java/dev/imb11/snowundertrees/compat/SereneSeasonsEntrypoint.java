@@ -4,6 +4,7 @@ package dev.imb11.snowundertrees.compat;
 import com.mineblock11.mru.entry.CompatabilityEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
+import dev.imb11.snowundertrees.world.WorldTickHandler;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -14,6 +15,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.WorldChunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +27,15 @@ import sereneseasons.init.ModConfig;
 import sereneseasons.season.SeasonHooks;
 //?}
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.HashMap;
 
 public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
     public static boolean isSereneSeasonsLoaded = false;
+
+    public static boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk, BlockPos biomeCheckPos, Biome biome) {
+        return SeasonHooks.shouldSnowHook(biome, world, biomeCheckPos);
+    }
 
     @Override
     public void initialize() {
@@ -58,7 +64,7 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
 
         for (var chunk : chunks) {
             BlockPos randomPosition = serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
-            if (!SnowUnderTreesConfig.get().supportedBiomes.contains(serverWorld.getBiome(randomPosition).getKey().get().getValue().toString())) {
+            if (!isBiomeSuitable(serverWorld, chunk.getWorldChunk(), randomPosition, serverWorld.getBiome(randomPosition).value())) {
                 continue;
             }
 
@@ -84,31 +90,38 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
             BlockState below = serverWorld.getBlockState(downPos);
 
             serverWorld.setBlockState(pos, after);
+            LOGGER.info("Melted snow at: {}", pos.toShortString());
 
             if (below.contains(SnowyBlock.SNOWY)) {
                 serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
+                LOGGER.info("Melted snow at: {}", downPos.toShortString());
             }
         }
     }
 
-    private static final Map<Season.SubSeason, Integer> MELT_CHANCES = new EnumMap<>(Season.SubSeason.class);
+    private static final HashMap<Object, Integer> MELT_CHANCES = new HashMap<>();
 
     static {
-        MELT_CHANCES.put(Season.SubSeason.EARLY_SPRING, 16);
-        MELT_CHANCES.put(Season.SubSeason.MID_SPRING, 12);
-        MELT_CHANCES.put(Season.SubSeason.LATE_SPRING, 8);
-        MELT_CHANCES.put(Season.SubSeason.EARLY_SUMMER, 4);
-        MELT_CHANCES.put(Season.SubSeason.MID_SUMMER, 2);
-        MELT_CHANCES.put(Season.SubSeason.LATE_SUMMER, 1);
-        MELT_CHANCES.put(Season.SubSeason.EARLY_AUTUMN, 8);
-        MELT_CHANCES.put(Season.SubSeason.MID_AUTUMN, 12);
-        MELT_CHANCES.put(Season.SubSeason.LATE_AUTUMN, 16);
+        if (FabricLoader.getInstance().isModLoaded("sereneseasons")) {
+            MELT_CHANCES.put(Season.SubSeason.EARLY_SPRING, 16);
+            MELT_CHANCES.put(Season.SubSeason.MID_SPRING, 12);
+            MELT_CHANCES.put(Season.SubSeason.LATE_SPRING, 8);
+            MELT_CHANCES.put(Season.SubSeason.EARLY_SUMMER, 4);
+            MELT_CHANCES.put(Season.SubSeason.MID_SUMMER, 2);
+            MELT_CHANCES.put(Season.SubSeason.LATE_SUMMER, 1);
+            MELT_CHANCES.put(Season.SubSeason.EARLY_AUTUMN, 8);
+            MELT_CHANCES.put(Season.SubSeason.MID_AUTUMN, 12);
+            MELT_CHANCES.put(Season.SubSeason.LATE_AUTUMN, 16);
+        }
     }
 
     private static boolean shouldMeltSnow(ServerWorld world, Season.SubSeason subSeason) {
         int chance = MELT_CHANCES.getOrDefault(subSeason, -1);
         if (chance == -1) return false;
-        return world.random.nextInt(chance) == 0;
+        LOGGER.info("Chance: {}", chance);
+        var rnd = world.random.nextBetween(0, chance);
+        LOGGER.info("Random: {}", rnd);
+        return rnd == 0;
     }
 
     public static boolean isWinter(World world) {
