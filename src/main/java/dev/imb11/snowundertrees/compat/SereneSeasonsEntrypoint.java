@@ -34,7 +34,7 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     public static boolean isSereneSeasonsLoaded = false;
 
     public static boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk, BlockPos biomeCheckPos, Biome biome) {
-        return SeasonHooks.shouldSnowHook(biome, world, biomeCheckPos);
+        return SeasonHooks.coldEnoughToSnowSeasonal(world, biomeCheckPos);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
 
     //? >=1.20.4 {
     private static void attemptMeltSnow(ServerWorld serverWorld) {
-        if (!isWinter(serverWorld) || !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
+        if (isWinter(serverWorld) && !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
         if (!shouldMeltSnow(serverWorld, SeasonHelper.getSeasonState(serverWorld).getSubSeason())) return;
 
         /*? if <1.21 {*/
@@ -64,10 +64,6 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
 
         for (var chunk : chunks) {
             BlockPos randomPosition = serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
-            if (!isBiomeSuitable(serverWorld, chunk.getWorldChunk(), randomPosition, serverWorld.getBiome(randomPosition).value())) {
-                continue;
-            }
-
             BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
             BlockState blockState = serverWorld.getBlockState(heightmapPosition);
             if (!blockState.isIn(BlockTags.LEAVES)) {
@@ -90,11 +86,9 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
             BlockState below = serverWorld.getBlockState(downPos);
 
             serverWorld.setBlockState(pos, after);
-            LOGGER.info("Melted snow at: {}", pos.toShortString());
 
             if (below.contains(SnowyBlock.SNOWY)) {
                 serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
-                LOGGER.info("Melted snow at: {}", downPos.toShortString());
             }
         }
     }

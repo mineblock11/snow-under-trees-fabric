@@ -9,5 +9,5 @@
   "snowundertrees.config.meltSnowSeasonally": "Melt Snow Seasonally",
   "snowundertrees.config.meltSnowSeasonally.desc": "If enabled, snow under trees will melt during spring, summer and autumn with variable melt-rates based on the season.",
   "snowundertrees.config.supportedBiomes": "Supported Biomes",
-  "snowundertrees.config.supportedBiomes.desc": "A list of biome IDs that will have snow generated under trees."
+  "snowundertrees.config.supportedBiomes.desc": "A list of biome IDs that will have snow generated under trees.\n\nIf a season mod is installed, Snow Under Trees will first check if the biome can support snow in the current season alongside the biomes within this list."
 }
