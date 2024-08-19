@@ -1,10 +1,8 @@
 
 package dev.imb11.snowundertrees.compat;
 
-import com.mineblock11.mru.entry.CompatabilityEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
-import dev.imb11.snowundertrees.world.WorldTickHandler;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -29,7 +27,7 @@ import sereneseasons.season.SeasonHooks;
 
 import java.util.HashMap;
 
-public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
+public class SereneSeasonsEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
     public static boolean isSereneSeasonsLoaded = false;
 
@@ -39,8 +37,7 @@ public class SereneSeasonsEntrypoint implements CompatabilityEntrypoint {
     }
     //?}
 
-    @Override
-    public void initialize() {
+    public static void initialize() {
         if (!FabricLoader.getInstance().isModLoaded("sereneseasons")) return;
 
         LOGGER.info("Serene Seasons detected!");

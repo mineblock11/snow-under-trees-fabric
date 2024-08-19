@@ -1,9 +1,9 @@
 {
   "snowundertrees.config.title": "Snow Under Trees 配置",
-  "snowundertrees.config.enableBiomeFeature": "启用世界生成",
-  "snowundertrees.config.enableBiomeFeature.desc": "如果禁用，在生成世界时将不会有雪在树底生成。",
-  "snowundertrees.config.enableWhenSnowing": "启用下雪生成",
-  "snowundertrees.config.enableWhenSnowing.desc": "如果禁用，在下雪时将不会有雪在树底生成。",
-  "snowundertrees.config.supportedBiomes": "支持的生物群系",
-  "snowundertrees.config.supportedBiomes.desc": "将会在树底生成雪的生物群系列表。"
+  "snowundertrees.config.option.enableBiomeFeature": "启用世界生成",
+  "snowundertrees.config.option.description.enableBiomeFeature": "如果禁用，在生成世界时将不会有雪在树底生成。",
+  "snowundertrees.config.option.enableWhenSnowing": "启用下雪生成",
+  "snowundertrees.config.option.description.enableWhenSnowing": "如果禁用，在下雪时将不会有雪在树底生成。",
+  "snowundertrees.config.option.supportedBiomes": "支持的生物群系",
+  "snowundertrees.config.option.description.supportedBiomes": "将会在树底生成雪的生物群系列表。"
 }

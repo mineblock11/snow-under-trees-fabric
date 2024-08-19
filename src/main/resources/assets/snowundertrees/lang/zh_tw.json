@@ -1,13 +1,13 @@
 {
   "snowundertrees.config.title": "Snow Under Trees 設定",
-  "snowundertrees.config.enableBiomeFeature": "啟用生成",
-  "snowundertrees.config.enableBiomeFeature.desc": "如果停用，樹下將不會生成積雪。",
-  "snowundertrees.config.enableWhenSnowing": "降雪時生成",
-  "snowundertrees.config.enableWhenSnowing.desc": "如果停用，降雪時樹下將不會生成積雪。",
-  "snowundertrees.config.respectSeasonMods": "遵循季節模組",
-  "snowundertrees.config.respectSeasonMods.desc": "如果啟用，樹下積雪將遵循季節模組——積雪將只會在冬季生成。",
-  "snowundertrees.config.meltSnowSeasonally": "季節性融雪",
-  "snowundertrees.config.meltSnowSeasonally.desc": "如果啟用，樹下的積雪會在春季、夏季和秋季融化，融化速度會根據季節而變化。",
-  "snowundertrees.config.supportedBiomes": "支援的生態域",
-  "snowundertrees.config.supportedBiomes.desc": "將在其樹下生成積雪的生態域 ID 清單。"
+  "snowundertrees.config.option.enableBiomeFeature": "啟用生成",
+  "snowundertrees.config.option.description.enableBiomeFeature": "如果停用，樹下將不會生成積雪。",
+  "snowundertrees.config.option.enableWhenSnowing": "降雪時生成",
+  "snowundertrees.config.option.description.enableWhenSnowing": "如果停用，降雪時樹下將不會生成積雪。",
+  "snowundertrees.config.option.respectSeasonMods": "遵循季節模組",
+  "snowundertrees.config.option.description.respectSeasonMods": "如果啟用，樹下積雪將遵循季節模組——積雪將只會在冬季生成。",
+  "snowundertrees.config.option.meltSnowSeasonally": "季節性融雪",
+  "snowundertrees.config.option.description.meltSnowSeasonally": "如果啟用，樹下的積雪會在春季、夏季和秋季融化，融化速度會根據季節而變化。",
+  "snowundertrees.config.option.supportedBiomes": "支援的生態域",
+  "snowundertrees.config.option.description.supportedBiomes": "將在其樹下生成積雪的生態域 ID 清單。"
 }

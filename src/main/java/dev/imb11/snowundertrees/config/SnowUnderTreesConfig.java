@@ -1,6 +1,8 @@
 package dev.imb11.snowundertrees.config;
 
-import com.mineblock11.mru.config.YACLHelper;
+import com.google.gson.GsonBuilder;
+import dev.imb11.mru.yacl.ConfigHelper;
+import dev.imb11.mru.yacl.EntryType;
 import dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint;
 import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.ListOption;
@@ -10,16 +12,25 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SnowUnderTreesConfig {
-    private static final YACLHelper.NamespacedHelper HELPER = new YACLHelper.NamespacedHelper("snowundertrees");
-    public static ConfigClassHandler<SnowUnderTreesConfig> CONFIG_CLASS_HANDLER = HELPER.createHandler(SnowUnderTreesConfig.class);
+    private static final ConfigHelper CONFIG_HELPER = new ConfigHelper("snowundertrees", "config");
+    public static ConfigClassHandler<SnowUnderTreesConfig> CONFIG_CLASS_HANDLER = ConfigClassHandler
+            .createBuilder(SnowUnderTreesConfig.class)
+            .id(Identifier.of("snowundertrees", "config"))
+            .serializer(config -> GsonConfigSerializerBuilder
+                    .create(config)
+                    .setPath(FabricLoader.getInstance().getConfigDir().resolve("snowundertrees.config.json"))
+                    .appendGsonBuilder(GsonBuilder::setPrettyPrinting).build())
+            .build();
 
     @SerialEntry
     public boolean enableBiomeFeature = true;
@@ -116,6 +127,7 @@ public class SnowUnderTreesConfig {
         Path newConfigPath = FabricLoader.getInstance().getConfigDir().resolve("snowundertrees.config.json");
 
         if (oldConfigPath.toFile().exists()) {
+            //noinspection ResultOfMethodCallIgnored
             oldConfigPath.toFile().renameTo(newConfigPath.toFile());
         }
 
@@ -124,38 +136,21 @@ public class SnowUnderTreesConfig {
 
     public static YetAnotherConfigLib getInstance() {
         return YetAnotherConfigLib.create(CONFIG_CLASS_HANDLER, (SnowUnderTreesConfig defaults, SnowUnderTreesConfig config, YetAnotherConfigLib.Builder builder) -> {
-            var enableWhenSnowingOption = Option.<Boolean>createBuilder()
-                    .name(HELPER.getName("enableWhenSnowing"))
-                    .description(HELPER.description("enableWhenSnowing", true))
-                    .binding(defaults.enableWhenSnowing, () -> config.enableWhenSnowing, (v) -> config.enableWhenSnowing = v)
-                    .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
-                    .build();
+            Option<Boolean> enableWhenSnowingOption = CONFIG_HELPER.get("enableWhenSnowing", defaults.enableWhenSnowing, () -> config.enableWhenSnowing, (v) -> config.enableWhenSnowing = v, true);
+            Option<Boolean> respectSeasonModsOption = CONFIG_HELPER.get("respectSeasonMods", defaults.respectSeasonMods, () -> config.respectSeasonMods, (v) -> config.respectSeasonMods = v);
+            Option<Boolean> meltSnowSeasonallyOption = CONFIG_HELPER.get("meltSnowSeasonally", defaults.meltSnowSeasonally, () -> config.meltSnowSeasonally, (v) -> config.meltSnowSeasonally = v);
 
             var supportedBiomesOption = ListOption.<String>createBuilder()
-                    .name(HELPER.getName("supportedBiomes"))
-                    .description(HELPER.description("supportedBiomes", false))
+                    .name(CONFIG_HELPER.getText(EntryType.OPTION_NAME, "supportedBiomes"))
+                    .description(CONFIG_HELPER.get("supportedBiomes", false))
                     .controller(StringControllerBuilder::create)
                     .initial("minecraft:plains")
                     .binding(defaults.supportedBiomes, () -> config.supportedBiomes, (v) -> config.supportedBiomes = v)
                     .build();
 
-            var respectSeasonModsOption = Option.<Boolean>createBuilder()
-                    .name(HELPER.getName("respectSeasonMods"))
-                    .description(HELPER.description("respectSeasonMods", true))
-                    .binding(defaults.respectSeasonMods, () -> config.respectSeasonMods, (v) -> config.respectSeasonMods = v)
-                    .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
-                    .build();
-
-            var meltSnowSeasonallyOption = Option.<Boolean>createBuilder()
-                    .name(HELPER.getName("meltSnowSeasonally"))
-                    .description(HELPER.description("meltSnowSeasonally", true))
-                    .binding(defaults.meltSnowSeasonally, () -> config.meltSnowSeasonally, (v) -> config.meltSnowSeasonally = v)
-                    .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
-                    .build();
-
             var enableBiomeFeatureOption = Option.<Boolean>createBuilder()
-                    .name(HELPER.getName("enableBiomeFeature"))
-                    .description(HELPER.description("enableBiomeFeature", true))
+                    .name(CONFIG_HELPER.getText(EntryType.OPTION_NAME, "enableBiomeFeature"))
+                    .description(CONFIG_HELPER.get("enableBiomeFeature", true))
                     .binding(defaults.enableBiomeFeature, () -> config.enableBiomeFeature, (v) -> config.enableBiomeFeature = v)
                     .listener((opt, val) -> {
                         enableWhenSnowingOption.setAvailable(val);
@@ -166,7 +161,7 @@ public class SnowUnderTreesConfig {
                     .controller(opt -> BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true))
                     .build();
 
-            var options = new ArrayList(List.of(
+            var options = new ArrayList<Option<?>>(List.of(
                     enableBiomeFeatureOption,
                     enableWhenSnowingOption
             ));

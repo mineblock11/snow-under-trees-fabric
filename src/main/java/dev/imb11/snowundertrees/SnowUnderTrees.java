@@ -1,5 +1,6 @@
 package dev.imb11.snowundertrees;
 
+import dev.imb11.snowundertrees.compat.SereneSeasonsEntrypoint;
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.world.SnowUnderTreesWorldgen;
 import dev.imb11.snowundertrees.world.WorldTickHandler;
@@ -18,6 +19,7 @@ public class SnowUnderTrees implements ModInitializer {
 	public void onInitialize() {
 		SnowUnderTreesConfig.load();
 		SnowUnderTreesWorldgen.initialize();
+		SereneSeasonsEntrypoint.initialize();
 
 		ServerTickEvents.START_WORLD_TICK.register(new WorldTickHandler());
 	}

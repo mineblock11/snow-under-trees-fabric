@@ -1,9 +1,9 @@
 {
   "snowundertrees.config.title": "Настройки снега под деревьями",
-  "snowundertrees.config.enableBiomeFeature": "Включить генерацию",
-  "snowundertrees.config.enableBiomeFeature.desc": "Если отключено, снег не будет образовываться под деревьями.",
-  "snowundertrees.config.enableWhenSnowing": "Генерировать при снегопаде",
-  "snowundertrees.config.enableWhenSnowing.desc": "Если отключено, снег не будет образовываться под деревьями во время снегопада.",
-  "snowundertrees.config.supportedBiomes": "Поддерживаемые биомы",
-  "snowundertrees.config.supportedBiomes.desc": "Список идентификаторов биомов, под деревьями которых будет образовываться снег."
+  "snowundertrees.config.option.enableBiomeFeature": "Включить генерацию",
+  "snowundertrees.config.option.description.enableBiomeFeature": "Если отключено, снег не будет образовываться под деревьями.",
+  "snowundertrees.config.option.enableWhenSnowing": "Генерировать при снегопаде",
+  "snowundertrees.config.option.description.enableWhenSnowing": "Если отключено, снег не будет образовываться под деревьями во время снегопада.",
+  "snowundertrees.config.option.supportedBiomes": "Поддерживаемые биомы",
+  "snowundertrees.config.option.description.supportedBiomes": "Список идентификаторов биомов, под деревьями которых будет образовываться снег."
 }
