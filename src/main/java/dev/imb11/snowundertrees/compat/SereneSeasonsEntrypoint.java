@@ -44,12 +44,11 @@ public class SereneSeasonsEntrypoint {
 
         //? >=1.20.4 {
         isSereneSeasonsLoaded = true;
-        ServerTickEvents.END_WORLD_TICK.register(SereneSeasonsEntrypoint::attemptMeltSnow);
         //?}
     }
 
     //? >=1.20.4 {
-    private static void attemptMeltSnow(ServerWorld serverWorld) {
+    public static void attemptMeltSnow(ServerWorld serverWorld) {
         if (isWinter(serverWorld) && !SnowUnderTreesConfig.get().meltSnowSeasonally) return;
         if (!shouldMeltSnow(serverWorld, SeasonHelper.getSeasonState(serverWorld).getSubSeason())) return;
 
@@ -111,9 +110,7 @@ public class SereneSeasonsEntrypoint {
     private static boolean shouldMeltSnow(ServerWorld world, Season.SubSeason subSeason) {
         int chance = MELT_CHANCES.getOrDefault(subSeason, -1);
         if (chance == -1) return false;
-        LOGGER.info("Chance: {}", chance);
         var rnd = world.random.nextBetween(0, chance);
-        LOGGER.info("Random: {}", rnd);
         return rnd == 0;
     }
 
