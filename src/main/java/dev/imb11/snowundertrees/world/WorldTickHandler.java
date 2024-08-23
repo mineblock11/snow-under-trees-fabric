@@ -31,9 +31,11 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
             return;
         }
 
+        //? if >1.20.1 {
         if(SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
             SereneSeasonsEntrypoint.attemptMeltSnow(world);
         }
+        //?}
 
         /*? if <1.21 {*/
         /*ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage;
