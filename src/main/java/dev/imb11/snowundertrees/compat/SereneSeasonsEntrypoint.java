@@ -3,12 +3,12 @@ package dev.imb11.snowundertrees.compat;
 
 import dev.imb11.snowundertrees.config.SnowUnderTreesConfig;
 import dev.imb11.snowundertrees.mixins.ThreadedAnvilChunkStorageInvoker;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SnowyBlock;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
@@ -26,6 +26,8 @@ import sereneseasons.season.SeasonHooks;
 //?}
 
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SereneSeasonsEntrypoint {
     private static final Logger LOGGER = LoggerFactory.getLogger("SnowUnderTrees/SereneSeasons");
@@ -58,9 +60,22 @@ public class SereneSeasonsEntrypoint {
         ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) serverWorld.getChunkManager().chunkLoadingManager;
          /*?}*/
 
-        var chunks = chunkStorage.invokeEntryIterator();
+        var chunks = chunkStorage.invokeEntryIterator().iterator();
 
-        for (var chunk : chunks) {
+        while (chunks.hasNext()) {
+            ChunkHolder chunkHolder = chunks.next();
+            var optionalChunk = chunkHolder.getTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK);
+
+            //? >=1.20.6 {
+            if (!optionalChunk.isPresent()) continue;
+            WorldChunk chunk = optionalChunk.orElseThrow(() -> new IllegalStateException("Chunk is not present"));
+            //?} else {
+            /*if (!optionalChunk.left().isPresent()) continue;
+            WorldChunk chunk = optionalChunk.left().get();
+            *///?}
+
+            if (!serverWorld.shouldTickBlocksInChunk(chunk.getPos().toLong())) continue;
+
             BlockPos randomPosition = serverWorld.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
             BlockPos heightmapPosition = serverWorld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, randomPosition).down();
             BlockState blockState = serverWorld.getBlockState(heightmapPosition);
@@ -74,16 +89,14 @@ public class SereneSeasonsEntrypoint {
             }
 
             BlockState before = serverWorld.getBlockState(pos);
-            BlockState after = Blocks.AIR.getDefaultState();
-
-            if (before == after) {
+            if (!before.isOf(Blocks.SNOW)) {
                 continue;
             }
 
+            serverWorld.setBlockState(pos, Blocks.AIR.getDefaultState());
+
             BlockPos downPos = pos.down();
             BlockState below = serverWorld.getBlockState(downPos);
-
-            serverWorld.setBlockState(pos, after);
 
             if (below.contains(SnowyBlock.SNOWY)) {
                 serverWorld.setBlockState(downPos, below.with(SnowyBlock.SNOWY, false), 2);
