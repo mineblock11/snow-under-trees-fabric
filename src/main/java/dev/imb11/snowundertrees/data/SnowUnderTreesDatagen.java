@@ -1,3 +1,4 @@
+//? >1.21.2 {
 package dev.imb11.snowundertrees.data;
 
 import dev.imb11.snowundertrees.SnowUnderTrees;
@@ -36,3 +37,4 @@ public class SnowUnderTreesDatagen implements DataGeneratorEntrypoint {
         return SnowUnderTrees.MOD_ID;
     }
 }
+//?}

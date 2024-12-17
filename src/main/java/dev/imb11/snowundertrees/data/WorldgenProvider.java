@@ -1,3 +1,4 @@
+//? >1.21.2 {
 package dev.imb11.snowundertrees.data;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -22,12 +23,12 @@ class WorldgenProvider extends FabricDynamicRegistryProvider {
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
 
         // Add all the registries we want to generate data for here.
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE));
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE));
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.BIOME));
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.STRUCTURE));
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.STRUCTURE_SET));
-        entries.addAll(registries.getWrapperOrThrow(RegistryKeys.TEMPLATE_POOL));
+        entries.addAll(registries.getOrThrow(RegistryKeys.CONFIGURED_FEATURE));
+        entries.addAll(registries.getOrThrow(RegistryKeys.PLACED_FEATURE));
+        entries.addAll(registries.getOrThrow(RegistryKeys.BIOME));
+        entries.addAll(registries.getOrThrow(RegistryKeys.STRUCTURE));
+        entries.addAll(registries.getOrThrow(RegistryKeys.STRUCTURE_SET));
+        entries.addAll(registries.getOrThrow(RegistryKeys.TEMPLATE_POOL));
     }
 
     @Override
@@ -35,3 +36,4 @@ class WorldgenProvider extends FabricDynamicRegistryProvider {
         return "Snow Under Trees World Generation";
     }
 }
+//?}

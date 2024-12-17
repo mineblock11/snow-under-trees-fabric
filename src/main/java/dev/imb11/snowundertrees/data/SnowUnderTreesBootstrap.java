@@ -1,3 +1,4 @@
+//? >1.21.2 {
 package dev.imb11.snowundertrees.data;
 
 
@@ -33,3 +34,4 @@ public class SnowUnderTreesBootstrap {
         registry.register(SnowUnderTreesWorldgen.placedKey(), new PlacedFeature(configuredFeatureLookup.getOrThrow(SnowUnderTreesWorldgen.configuredKey()), List.of()));
     }
 }
+//?}

@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SnowyBlock;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ChunkHolder;
 import net.minecraft.server.world.ServerWorld;
@@ -22,8 +23,6 @@ import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.server.world.OptionalChunk;
 /*?}*/
 
-import java.util.Optional;
-
 public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
     @Override
     public void onStartTick(ServerWorld world) {
@@ -31,27 +30,18 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
             return;
         }
 
-        //? if >1.20.1 {
         if(SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
             SereneSeasonsEntrypoint.attemptMeltSnow(world);
         }
-        //?}
 
-        /*? if <1.21 {*/
-        /*ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().threadedAnvilChunkStorage;
-        *//*?} else {*/
         ThreadedAnvilChunkStorageInvoker chunkStorage = (ThreadedAnvilChunkStorageInvoker) world.getChunkManager().chunkLoadingManager;
-        /*?}*/
+
         Iterable<ChunkHolder> chunkHolders = chunkStorage.invokeEntryIterator();
         chunkHolders.forEach(chunkHolder -> processChunk(world, chunkHolder));
     }
 
     private void processChunk(ServerWorld world, ChunkHolder chunkHolder) {
-        /*? if <1.20.5 {*/
-        /*Optional<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK).left();
-        *//*?} else {*/
         OptionalChunk<WorldChunk> optionalChunk = chunkHolder.getEntityTickingFuture().getNow(ChunkHolder.UNLOADED_WORLD_CHUNK);
-        /*?}*/
 
         if (optionalChunk.isPresent() && shouldProcessChunk(world)) {
             WorldChunk chunk = optionalChunk.orElse(null);
@@ -82,16 +72,23 @@ public class WorldTickHandler implements ServerTickEvents.StartWorldTick {
     public static boolean isBiomeSuitable(ServerWorld world, WorldChunk chunk) {
         BlockPos biomeCheckPos = world.getRandomPosInChunk(chunk.getPos().getStartX(), 0, chunk.getPos().getStartZ(), 15);
         Biome biome = world.getBiome(biomeCheckPos).value();
-        Identifier biomeId = world.getRegistryManager().get(RegistryKeys.BIOME).getKey(biome).get().getValue();
+
+        var registryManager = world.getRegistryManager();
+        Registry<Biome> biomeRegistry
+        //? if <1.21.2 {
+        /*= registryManager.get(RegistryKeys.BIOME);
+        *///?} else {
+        = registryManager.getOrThrow(RegistryKeys.BIOME);
+        //?}
+
+        Identifier biomeId = biomeRegistry.getKey(biome).get().getValue();
 
         boolean isSupported = SnowUnderTreesConfig.get().supportedBiomes.contains(biomeId.toString());
 
-        //? >=1.20.4 {
         if(SereneSeasonsEntrypoint.isSereneSeasonsLoaded) {
-            return SereneSeasonsEntrypoint.isBiomeSuitable(world, chunk, biomeCheckPos, biome)
+            return SereneSeasonsEntrypoint.isBiomeSuitable(world, biomeCheckPos)
                     || isSupported;
         }
-        //?}
 
         return isSupported;
     }
