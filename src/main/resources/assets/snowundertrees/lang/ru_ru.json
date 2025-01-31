@@ -1,9 +1,13 @@
 {
-  "snowundertrees.config.title": "Настройки снега под деревьями",
+  "snowundertrees.config.title": "Настройки Snow Under Trees",
   "snowundertrees.config.option.enableBiomeFeature": "Включить генерацию",
-  "snowundertrees.config.option.description.enableBiomeFeature": "Если отключено, снег не будет образовываться под деревьями.",
+  "snowundertrees.config.option.description.enableBiomeFeature": "Если отключено, снег не будет генерироваться под деревьями.",
   "snowundertrees.config.option.enableWhenSnowing": "Генерировать при снегопаде",
-  "snowundertrees.config.option.description.enableWhenSnowing": "Если отключено, снег не будет образовываться под деревьями во время снегопада.",
+  "snowundertrees.config.option.description.enableWhenSnowing": "Если отключено, снег не будет генерироваться под деревьями во время снегопада.",
+  "snowundertrees.config.option.respectSeasonMods": "Соблюдать сезоны из модов",
+  "snowundertrees.config.option.description.respectSeasonMods": "Если включено, Snow Under Trees будет соблюдать сезоны из мода - снег будет генерироваться только зимой.",
+  "snowundertrees.config.option.meltSnowSeasonally": "Сезонное таяние снега",
+  "snowundertrees.config.option.description.meltSnowSeasonally": "Если включено, снег под деревьями будет таять во время весны, лета, и осени с переменной скоростью плавления в зависимости от сезона.",
   "snowundertrees.config.option.supportedBiomes": "Поддерживаемые биомы",
-  "snowundertrees.config.option.description.supportedBiomes": "Список идентификаторов биомов, под деревьями которых будет образовываться снег."
+  "snowundertrees.config.option.description.supportedBiomes": "Список идентификаторов биомов, под деревьями которых будет генерироваться снег.\n\nЕсли установлен мод с сезонами, Snow Under Trees сначала проверит, может ли биом поддерживать снег в текущем сезоне, наряду с биомами из этого списка."
 }
