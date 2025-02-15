@@ -109,7 +109,8 @@ public class SnowUnderTreesConfig {
             "cynic:snowy_forest",
             "cynic:snowy_forest_strand",
             "cynic:snowy_stony_shore",
-            "cynic:snowy_strand"
+            "cynic:snowy_strand",
+            "snowbound:boreal_forest"
     );
 
     @SerialEntry
